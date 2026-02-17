@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://w3id.org/security/v1"
+  ],
+  "id": "https://oeee.cafe/ap/users/3609fd4e-d51d-4db8-9f04-4189815864dd",
+  "type": "Person",
+  "preferredUsername": "hongminhee",
+  "name": "洪兔",
+  "inbox": "https://oeee.cafe/ap/users/3609fd4e-d51d-4db8-9f04-4189815864dd/inbox",
+  "outbox": "https://oeee.cafe/ap/users/3609fd4e-d51d-4db8-9f04-4189815864dd/outbox",
+  "publicKey": {
+    "id": "https://oeee.cafe/ap/users/3609fd4e-d51d-4db8-9f04-4189815864dd#main-key",
+    "owner": "https://oeee.cafe/ap/users/3609fd4e-d51d-4db8-9f04-4189815864dd",
+    "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAowJfOzpA/nAYyL0bVDTm\niCAOlhFCIBnqwk1jvGrbkDhMzxlsgyoDqUSlmcJdKaPwu24YdFajDtJIgto27Ju7\nIC3hB7OFchnZ4JZrdYFo7CJABOzK58o12sdmmkCdY5hXWf1604E+mzyIdBAJ1FFJ\nL8vP07VEUsZ7yo9x0iVNg7HpCOK+y6BqI2GHS2dq9qkqQEIhC2TKHXn/RQVXwYB6\nG+YQmVUtcsbCVKdcWyTKhItLRGnepu3BqBSbieLxV27B1O9NFSoPu8xiBUnYwMoe\nsUQCE5tGcqxc75HzcVCbq7PqVqHZ1NW9RYssaSUqi4FYcjXxQrR08DrAl8rR4eXT\n4QIDAQAB\n-----END PUBLIC KEY-----\n"
+  },
+  "endpoints": {
+    "type": "as:Endpoints",
+    "sharedInbox": "https://oeee.cafe/inbox"
+  },
+  "followers": "https://oeee.cafe/ap/users/3609fd4e-d51d-4db8-9f04-4189815864dd/followers",
+  "manuallyApprovesFollowers": false,
+  "url": "https://oeee.cafe/@hongminhee"
+}

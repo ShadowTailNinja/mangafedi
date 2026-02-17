@@ -1,0 +1,2 @@
+# Drizzle migration files are generated here by `pnpm db:generate`
+# Run `pnpm db:migrate` to apply migrations

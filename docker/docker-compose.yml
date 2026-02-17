@@ -1,0 +1,105 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    env_file: ../.env
+    environment:
+      DATABASE_PRIMARY_URL: postgres://manga:${DB_PASSWORD}@pgbouncer:6432/manga
+      DATABASE_QUEUE_URL: postgres://manga:${DB_PASSWORD}@db:5432/manga
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:3000/api/v1/instance"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: manga
+      POSTGRES_USER: manga
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U manga"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      postgres
+      -c autovacuum_vacuum_scale_factor=0.02
+      -c autovacuum_analyze_scale_factor=0.01
+      -c shared_buffers=256MB
+      -c effective_cache_size=768MB
+      -c work_mem=4MB
+
+  pgbouncer:
+    image: bitnami/pgbouncer:latest
+    environment:
+      POSTGRESQL_HOST: db
+      POSTGRESQL_PORT: 5432
+      POSTGRESQL_DATABASE: manga
+      POSTGRESQL_USERNAME: manga
+      POSTGRESQL_PASSWORD: ${DB_PASSWORD}
+      PGBOUNCER_DATABASE: manga
+      PGBOUNCER_POOL_MODE: transaction
+      PGBOUNCER_DEFAULT_POOL_SIZE: 25
+      PGBOUNCER_MAX_CLIENT_CONN: 1000
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backup:
+    image: amazon/aws-cli:latest
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_NAME: manga
+      DB_USER: manga
+      AWS_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${STORAGE_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${STORAGE_REGION}
+      BACKUP_ENDPOINT: ${STORAGE_ENDPOINT}
+      BACKUP_BUCKET: ${BACKUP_STORAGE_BUCKET}
+      BACKUP_PREFIX: ${BACKUP_STORAGE_PREFIX:-db/}
+    volumes:
+      - ./backup.sh:/backup.sh:ro
+      - /tmp/backups:/tmp/backups
+    entrypoint: ["sh", "-c", "apk add --no-cache postgresql-client && echo '0 2 * * * /backup.sh >> /var/log/backup.log 2>&1' | crontab - && crond -f -d 6"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

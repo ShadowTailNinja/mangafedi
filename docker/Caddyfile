@@ -1,0 +1,9 @@
+{env.BASE_DOMAIN} {
+  reverse_proxy app:3000
+
+  @static path /style.css /reader.js /favicon.ico
+  handle @static {
+    reverse_proxy app:3000
+    header Cache-Control "public, max-age=86400"
+  }
+}

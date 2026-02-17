@@ -1,0 +1,52 @@
+{
+  "name": "mangafedi",
+  "version": "1.0.0",
+  "description": "Federated Manga, Manhwa & Manhua Hosting Platform",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "setup": "bash scripts/setup.sh",
+    "create-admin": "tsx scripts/createAdmin.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@hono/node-server": "^1.13.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
+    "@fedify/fedify": "^1.10.0",
+    "@fedify/hono": "^1.0.0",
+    "@fedify/postgres": "^1.0.0",
+    "@hono/zod-openapi": "^0.16.0",
+    "@noble/ed25519": "^2.1.0",
+    "@noble/hashes": "^1.4.0",
+    "@scure/bip39": "^1.3.0",
+    "bcrypt": "^5.1.1",
+    "blurhash": "^2.0.5",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.32.0",
+    "hono": "^4.4.0",
+    "postgres": "^3.4.4",
+    "sharp": "^0.33.4",
+    "unzipper": "^0.12.3",
+    "uuidv7": "^1.0.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.0.0",
+    "@types/unzipper": "^0.10.9",
+    "drizzle-kit": "^0.23.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
